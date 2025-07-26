@@ -6,10 +6,13 @@ const overlay = document.querySelector(".overlay");
 const section1 = document.querySelector("#section--1");
 const section2 = document.querySelector("#section--2");
 const section3 = document.querySelector("#section--3");
+const navLinks = document.querySelector(".nav__links");
 
 const btnCloseModal = document.querySelector(".btn--close-modal");
 const btnsOpenModal = document.querySelectorAll(".btn--open-modal");
 const btnScroll = document.querySelector(".btn--scroll-to");
+
+const toSections = document.querySelectorAll(".nav__link");
 
 // Modal Window
 const openModal = function (e) {
@@ -44,4 +47,28 @@ btnScroll.addEventListener("click", function () {
     // });
     // new way
     section1.scrollIntoView({ behavior: "smooth" });
+});
+
+// nav links
+// this can create too many event listeners and there is a button there in the end giving error
+// toSections.forEach(function (el) {
+//     el.addEventListener("click", function (e) {
+//         e.preventDefault();
+//         const id = this.getAttribute("href");
+//         document.querySelector(id).scrollIntoView({ behavior: "smooth" });
+//     });
+// });
+// with event delegation
+// 1. add the EventListener into the parent element that contain all the elements we want
+navLinks.addEventListener("click", function (e) {
+    e.preventDefault();
+    // 2. determine where did the event came from
+    const source = e.target;
+    // matching strategy
+    if (source.classList.contains("nav__link")) {
+        const id = source.getAttribute("href");
+        if (id !== "#") {
+            document.querySelector(id).scrollIntoView({ behavior: "smooth" });
+        }
+    }
 });
