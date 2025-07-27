@@ -9,6 +9,8 @@ const section3 = document.querySelector("#section--3");
 const navLinks = document.querySelector(".nav__links");
 const tabContainer = document.querySelector(".operations__tab-container");
 const operationsContents = document.querySelectorAll(".operations__content");
+const mainNav = document.querySelector(".nav");
+const mainLogo = document.querySelector(".nav__logo");
 
 const btnCloseModal = document.querySelector(".btn--close-modal");
 const btnsOpenModal = document.querySelectorAll(".btn--open-modal");
@@ -92,3 +94,26 @@ tabContainer.addEventListener("click", function (e) {
         .querySelector(`.operations__content--${source.dataset.tab}`)
         .classList.add("operations__content--active");
 });
+
+// fading nav
+const changeOpacity = function (e) {
+    const source = e.target;
+    if (!e.target.classList.contains("nav__link")) return;
+    const siblings = source.closest(".nav").querySelectorAll(".nav__link");
+    siblings.forEach(link => {
+        if (link !== source) {
+            link.style.opacity = this;
+        }
+    });
+    mainLogo.style.opacity = this;
+};
+// not the best with only a function call inside of a function
+// mainNav.addEventListener("mouseover", function (e) {
+//     changeOpacity(e, 0.5);
+// });
+// mainNav.addEventListener("mouseout", function (e) {
+//     changeOpacity(e, 1);
+// });
+// better way, by setting "this" to the input value we can just use that
+mainNav.addEventListener("mouseover", changeOpacity.bind(0.5));
+mainNav.addEventListener("mouseout", changeOpacity.bind(1));
