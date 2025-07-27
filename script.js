@@ -11,6 +11,7 @@ const operationsContents = document.querySelectorAll(".operations__content");
 const mainNav = document.querySelector(".nav");
 const mainLogo = document.querySelector(".nav__logo");
 const header = document.querySelector(".header");
+const featureImgs = document.querySelectorAll(".features__img");
 
 const btnCloseModal = document.querySelector(".btn--close-modal");
 const btnsOpenModal = document.querySelectorAll(".btn--open-modal");
@@ -138,7 +139,7 @@ mainNav.addEventListener("mouseout", changeOpacity.bind(1));
 //     }
 // });
 // WITH intersection observer API we can improve the stick nav
-const obsNavFunction = function (entries) {
+const obsNav = function (entries) {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             mainNav.classList.remove("sticky");
@@ -147,7 +148,7 @@ const obsNavFunction = function (entries) {
         }
     });
 };
-const observerHeader = new IntersectionObserver(obsNavFunction, {
+const observerHeader = new IntersectionObserver(obsNav, {
     root: null,
     threshold: 0,
     rootMargin: `-${mainNavHeight}`,
@@ -155,9 +156,8 @@ const observerHeader = new IntersectionObserver(obsNavFunction, {
 observerHeader.observe(header);
 
 // section transition
-const obsSectionsFunction = function (entries) {
+const obsSections = function (entries) {
     entries.forEach(entry => {
-        console.log(entry);
         if (entry.isIntersecting) {
             entry.target.classList.remove("section--hidden");
         } else {
@@ -165,8 +165,27 @@ const obsSectionsFunction = function (entries) {
         }
     });
 };
-const observerSections = new IntersectionObserver(obsSectionsFunction, {
+const observerSections = new IntersectionObserver(obsSections, {
     root: null,
     threshold: 0.15,
 });
 sections.forEach(section => observerSections.observe(section));
+
+// lazy loading images
+const obsFeature = function (entries) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const target = entry.target;
+            target.classList.remove("lazy-img");
+            target.setAttribute("src", target.dataset.src);
+        }
+        else {
+            entry.target.classList.add("lazy-img");
+        }
+    });
+};
+const observerFeatures = new IntersectionObserver(obsFeature, {
+    root: null,
+    threshold: 0,
+});
+featureImgs.forEach(img => observerFeatures.observe(img));
