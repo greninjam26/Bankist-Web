@@ -12,11 +12,13 @@ const mainNav = document.querySelector(".nav");
 const mainLogo = document.querySelector(".nav__logo");
 const header = document.querySelector(".header");
 const lazyImgs = document.querySelectorAll("img[data-src]");
+const slides = document.querySelectorAll(".slide");
 
 const btnCloseModal = document.querySelector(".btn--close-modal");
 const btnsOpenModal = document.querySelectorAll(".btn--open-modal");
 const btnScroll = document.querySelector(".btn--scroll-to");
 const btnTabs = document.querySelectorAll(".operations__tab");
+const [sliderLeft, sliderRight] = document.querySelectorAll(".slider__btn");
 
 const toSections = document.querySelectorAll(".nav__link");
 
@@ -25,6 +27,7 @@ const section1Coor = section1.getBoundingClientRect().top;
 const mainNavHeight = getComputedStyle(mainNav).height;
 // or
 // const mainNavHeight = mainNav.getBoundingClientRect().height;
+const sliderLoc = [];
 
 // Modal Window
 const openModal = function (e) {
@@ -187,6 +190,38 @@ const obsLazy = function (entries, observer) {
 const observerLazy = new IntersectionObserver(obsLazy, {
     root: null,
     threshold: 0,
-    rootMargin: "200px"
+    rootMargin: "200px",
 });
 lazyImgs.forEach(img => observerLazy.observe(img));
+
+// slider
+slides.forEach((slide, i) => {
+    sliderLoc[i] = i * 100;
+    slide.style.transform = `translateX(${sliderLoc[i]}%)`;
+});
+sliderLeft.addEventListener("click", function () {
+    if (sliderLoc[0] === 0) {
+        slides.forEach((slide, i) => {
+            sliderLoc[i] -= (sliderLoc.length-1)*100;
+            slide.style.transform = `translateX(${sliderLoc[i]}%)`;
+        });
+    } else {
+        slides.forEach((slide, i) => {
+            sliderLoc[i] += 100;
+            slide.style.transform = `translateX(${sliderLoc[i]}%)`;
+        });
+    }
+});
+sliderRight.addEventListener("click", function () {
+    if (sliderLoc.at(-1) === 0) {
+        slides.forEach((slide, i) => {
+            sliderLoc[i] += (sliderLoc.length-1)*100;
+            slide.style.transform = `translateX(${sliderLoc[i]}%)`;
+        });
+    } else {
+        slides.forEach((slide, i) => {
+            sliderLoc[i] -= 100;
+            slide.style.transform = `translateX(${sliderLoc[i]}%)`;
+        });
+    }
+});
