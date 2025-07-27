@@ -78,12 +78,17 @@ navLinks.addEventListener("click", function (e) {
 
 // the tab windows
 tabContainer.addEventListener("click", function (e) {
-    if (e.target.classList.contains("operations__tab")) {
-        btnTabs.forEach(btn => btn.classList.remove("operations__tab--active"));
-        e.target.classList.add("operations__tab--active");
-        operationsContents.forEach(content =>
-            content.classList.remove("operations__content--active")
-        );
-        document.querySelector(`.operations__content--${e.target.getAttribute("data-tab")}`).classList.add("operations__content--active");
-    }
+    const source = e.target.closest(".operations__tab");
+    // prevent source is null
+    if (!source) return;
+    // activate tab
+    btnTabs.forEach(btn => btn.classList.remove("operations__tab--active"));
+    source.classList.add("operations__tab--active");
+    // activate content area
+    operationsContents.forEach(content =>
+        content.classList.remove("operations__content--active")
+    );
+    document
+        .querySelector(`.operations__content--${source.dataset.tab}`)
+        .classList.add("operations__content--active");
 });
