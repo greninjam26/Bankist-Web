@@ -11,7 +11,7 @@ const operationsContents = document.querySelectorAll(".operations__content");
 const mainNav = document.querySelector(".nav");
 const mainLogo = document.querySelector(".nav__logo");
 const header = document.querySelector(".header");
-const featureImgs = document.querySelectorAll(".features__img");
+const lazyImgs = document.querySelectorAll("img[data-src]");
 
 const btnCloseModal = document.querySelector(".btn--close-modal");
 const btnsOpenModal = document.querySelectorAll(".btn--open-modal");
@@ -172,20 +172,21 @@ const observerSections = new IntersectionObserver(obsSections, {
 sections.forEach(section => observerSections.observe(section));
 
 // lazy loading images
-const obsFeature = function (entries) {
+const obsLazy = function (entries, observer) {
     entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const target = entry.target;
+        const target = entry.target;
+        if (!entry.isIntersecting) return;
+
+        target.src = target.dataset.src;
+        target.addEventListener("load", function () {
             target.classList.remove("lazy-img");
-            target.setAttribute("src", target.dataset.src);
-        }
-        else {
-            entry.target.classList.add("lazy-img");
-        }
+        });
+        observer.unobserve(target);
     });
 };
-const observerFeatures = new IntersectionObserver(obsFeature, {
+const observerLazy = new IntersectionObserver(obsLazy, {
     root: null,
     threshold: 0,
+    rootMargin: "200px"
 });
-featureImgs.forEach(img => observerFeatures.observe(img));
+lazyImgs.forEach(img => observerLazy.observe(img));
