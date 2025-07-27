@@ -3,15 +3,14 @@
 // DOM selection
 const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
-const section1 = document.querySelector("#section--1");
-const section2 = document.querySelector("#section--2");
-const section3 = document.querySelector("#section--3");
+const sections = document.querySelectorAll(".section");
+const [section1, section2, section3, section4] = sections;
 const navLinks = document.querySelector(".nav__links");
 const tabContainer = document.querySelector(".operations__tab-container");
 const operationsContents = document.querySelectorAll(".operations__content");
 const mainNav = document.querySelector(".nav");
 const mainLogo = document.querySelector(".nav__logo");
-const header = document.querySelector('.header');
+const header = document.querySelector(".header");
 
 const btnCloseModal = document.querySelector(".btn--close-modal");
 const btnsOpenModal = document.querySelectorAll(".btn--open-modal");
@@ -139,20 +138,35 @@ mainNav.addEventListener("mouseout", changeOpacity.bind(1));
 //     }
 // });
 // WITH intersection observer API we can improve the stick nav
-const obsOption = {
-    root: null,
-    threshold: 0,
-    rootMargin: `-${mainNavHeight}`,
-};
-const obsFunction = function (entries) {
+const obsNavFunction = function (entries) {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             mainNav.classList.remove("sticky");
-        }
-        else {
+        } else {
             mainNav.classList.add("sticky");
         }
     });
-}
-const observerHeader = new IntersectionObserver(obsFunction, obsOption);
+};
+const observerHeader = new IntersectionObserver(obsNavFunction, {
+    root: null,
+    threshold: 0,
+    rootMargin: `-${mainNavHeight}`,
+});
 observerHeader.observe(header);
+
+// section transition
+const obsSectionsFunction = function (entries) {
+    entries.forEach(entry => {
+        console.log(entry);
+        if (entry.isIntersecting) {
+            entry.target.classList.remove("section--hidden");
+        } else {
+            entry.target.classList.add("section--hidden");
+        }
+    });
+};
+const observerSections = new IntersectionObserver(obsSectionsFunction, {
+    root: null,
+    threshold: 0.15,
+});
+sections.forEach(section => observerSections.observe(section));
