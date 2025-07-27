@@ -7,10 +7,13 @@ const section1 = document.querySelector("#section--1");
 const section2 = document.querySelector("#section--2");
 const section3 = document.querySelector("#section--3");
 const navLinks = document.querySelector(".nav__links");
+const tabContainer = document.querySelector(".operations__tab-container");
+const operationsContents = document.querySelectorAll(".operations__content");
 
 const btnCloseModal = document.querySelector(".btn--close-modal");
 const btnsOpenModal = document.querySelectorAll(".btn--open-modal");
 const btnScroll = document.querySelector(".btn--scroll-to");
+const btnTabs = document.querySelectorAll(".operations__tab");
 
 const toSections = document.querySelectorAll(".nav__link");
 
@@ -70,5 +73,17 @@ navLinks.addEventListener("click", function (e) {
         if (id !== "#") {
             document.querySelector(id).scrollIntoView({ behavior: "smooth" });
         }
+    }
+});
+
+// the tab windows
+tabContainer.addEventListener("click", function (e) {
+    if (e.target.classList.contains("operations__tab")) {
+        btnTabs.forEach(btn => btn.classList.remove("operations__tab--active"));
+        e.target.classList.add("operations__tab--active");
+        operationsContents.forEach(content =>
+            content.classList.remove("operations__content--active")
+        );
+        document.querySelector(`.operations__content--${e.target.getAttribute("data-tab")}`).classList.add("operations__content--active");
     }
 });
