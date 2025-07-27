@@ -11,6 +11,7 @@ const tabContainer = document.querySelector(".operations__tab-container");
 const operationsContents = document.querySelectorAll(".operations__content");
 const mainNav = document.querySelector(".nav");
 const mainLogo = document.querySelector(".nav__logo");
+const header = document.querySelector('.header');
 
 const btnCloseModal = document.querySelector(".btn--close-modal");
 const btnsOpenModal = document.querySelectorAll(".btn--open-modal");
@@ -18,6 +19,12 @@ const btnScroll = document.querySelector(".btn--scroll-to");
 const btnTabs = document.querySelectorAll(".operations__tab");
 
 const toSections = document.querySelectorAll(".nav__link");
+
+// initial variables
+const section1Coor = section1.getBoundingClientRect().top;
+const mainNavHeight = getComputedStyle(mainNav).height;
+// or
+// const mainNavHeight = mainNav.getBoundingClientRect().height;
 
 // Modal Window
 const openModal = function (e) {
@@ -117,3 +124,35 @@ const changeOpacity = function (e) {
 // better way, by setting "this" to the input value we can just use that
 mainNav.addEventListener("mouseover", changeOpacity.bind(0.5));
 mainNav.addEventListener("mouseout", changeOpacity.bind(1));
+
+// sticky nav
+// this should be avoided "scroll" is very not efficient
+// this also breaks if the page is reloaded not at the top
+// window.addEventListener("scroll", function () {
+//     console.log(window.scrollY);
+//     console.log(section1Coor);
+//     if (window.scrollY >= section1Coor) {
+//         mainNav.classList.add("sticky");
+//     }
+//     else {
+//         mainNav.classList.remove("sticky");
+//     }
+// });
+// WITH intersection observer API we can improve the stick nav
+const obsOption = {
+    root: null,
+    threshold: 0,
+    rootMargin: `-${mainNavHeight}`,
+};
+const obsFunction = function (entries) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            mainNav.classList.remove("sticky");
+        }
+        else {
+            mainNav.classList.add("sticky");
+        }
+    });
+}
+const observerHeader = new IntersectionObserver(obsFunction, obsOption);
+observerHeader.observe(header);
