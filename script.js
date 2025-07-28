@@ -13,6 +13,7 @@ const mainLogo = document.querySelector(".nav__logo");
 const header = document.querySelector(".header");
 const lazyImgs = document.querySelectorAll("img[data-src]");
 const slides = document.querySelectorAll(".slide");
+const dotAll = document.querySelector(".dots");
 
 const btnCloseModal = document.querySelector(".btn--close-modal");
 const btnsOpenModal = document.querySelectorAll(".btn--open-modal");
@@ -30,9 +31,15 @@ const mainNavHeight = getComputedStyle(mainNav).height;
 let curSlide;
 
 // utility functions
-const toSlide = function (slide) {
+const toSlide = function (curS) {
     slides.forEach((s, i) => {
-        s.style.transform = `translateX(${(i - slide) * 100}%)`;
+        s.style.transform = `translateX(${(i - curS) * 100}%)`;
+    });
+    dotAll.childNodes.forEach(dot => {
+        dot.classList.remove("dots__dot--active");
+        if (dot.dataset.slide-1 === curS) {
+            dot.classList.add("dots__dot--active");
+        }
     });
 };
 
@@ -202,21 +209,50 @@ const observerLazy = new IntersectionObserver(obsLazy, {
 lazyImgs.forEach(img => observerLazy.observe(img));
 
 // slider
+// add the dots
+const createDots = function () {
+    slides.forEach(function (_, i) {
+        dotAll.insertAdjacentHTML(
+            "beforeend",
+            `<button class="dots__dot" data-slide="${i + 1}"></button>`
+        );
+    });
+};
+// initalization
+createDots();
 curSlide = 0;
 toSlide(curSlide);
-sliderLeft.addEventListener("click", function () {
+// functions
+const slideLeft = function () {
     if (curSlide === 0) {
         curSlide = slides.length - 1;
     } else {
         curSlide--;
     }
     toSlide(curSlide);
-});
-sliderRight.addEventListener("click", function () {
+};
+const slideRight = function () {
     if (curSlide === slides.length - 1) {
         curSlide = 0;
     } else {
         curSlide++;
     }
     toSlide(curSlide);
+};
+// slide button
+sliderLeft.addEventListener("click", slideLeft);
+sliderRight.addEventListener("click", slideRight);
+document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight") {
+        slideRight();
+    } else if (e.key === "ArrowLeft") {
+        slideLeft();
+    }
+});
+// dots
+dotAll.addEventListener("click", function (e) {
+    if (e.target.classList.contains("dots__dot")) {
+        curSlide = e.target.dataset.slide - 1;
+        toSlide(curSlide);
+    }
 });
