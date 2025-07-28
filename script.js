@@ -31,16 +31,24 @@ const mainNavHeight = getComputedStyle(mainNav).height;
 let curSlide;
 
 // utility functions
+const createDots = function () {
+    slides.forEach(function (_, i) {
+        dotAll.insertAdjacentHTML(
+            "beforeend",
+            `<button class="dots__dot" data-slide="${i + 1}"></button>`
+        );
+    });
+};
 const toSlide = function (curS) {
     slides.forEach((s, i) => {
         s.style.transform = `translateX(${(i - curS) * 100}%)`;
     });
     dotAll.childNodes.forEach(dot => {
         dot.classList.remove("dots__dot--active");
-        if (dot.dataset.slide-1 === curS) {
-            dot.classList.add("dots__dot--active");
-        }
     });
+    document
+        .querySelector(`.dots__dot[data-slide="${curS + 1}"`)
+        .classList.add("dots__dot--active");
 };
 
 // Modal Window
@@ -209,15 +217,6 @@ const observerLazy = new IntersectionObserver(obsLazy, {
 lazyImgs.forEach(img => observerLazy.observe(img));
 
 // slider
-// add the dots
-const createDots = function () {
-    slides.forEach(function (_, i) {
-        dotAll.insertAdjacentHTML(
-            "beforeend",
-            `<button class="dots__dot" data-slide="${i + 1}"></button>`
-        );
-    });
-};
 // initalization
 createDots();
 curSlide = 0;
