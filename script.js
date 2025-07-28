@@ -27,7 +27,14 @@ const section1Coor = section1.getBoundingClientRect().top;
 const mainNavHeight = getComputedStyle(mainNav).height;
 // or
 // const mainNavHeight = mainNav.getBoundingClientRect().height;
-const sliderLoc = [];
+let curSlide;
+
+// utility functions
+const toSlide = function (slide) {
+    slides.forEach((s, i) => {
+        s.style.transform = `translateX(${(i - slide) * 100}%)`;
+    });
+};
 
 // Modal Window
 const openModal = function (e) {
@@ -195,33 +202,21 @@ const observerLazy = new IntersectionObserver(obsLazy, {
 lazyImgs.forEach(img => observerLazy.observe(img));
 
 // slider
-slides.forEach((slide, i) => {
-    sliderLoc[i] = i * 100;
-    slide.style.transform = `translateX(${sliderLoc[i]}%)`;
-});
+curSlide = 0;
+toSlide(curSlide);
 sliderLeft.addEventListener("click", function () {
-    if (sliderLoc[0] === 0) {
-        slides.forEach((slide, i) => {
-            sliderLoc[i] -= (sliderLoc.length-1)*100;
-            slide.style.transform = `translateX(${sliderLoc[i]}%)`;
-        });
+    if (curSlide === 0) {
+        curSlide = slides.length - 1;
     } else {
-        slides.forEach((slide, i) => {
-            sliderLoc[i] += 100;
-            slide.style.transform = `translateX(${sliderLoc[i]}%)`;
-        });
+        curSlide--;
     }
+    toSlide(curSlide);
 });
 sliderRight.addEventListener("click", function () {
-    if (sliderLoc.at(-1) === 0) {
-        slides.forEach((slide, i) => {
-            sliderLoc[i] += (sliderLoc.length-1)*100;
-            slide.style.transform = `translateX(${sliderLoc[i]}%)`;
-        });
+    if (curSlide === slides.length - 1) {
+        curSlide = 0;
     } else {
-        slides.forEach((slide, i) => {
-            sliderLoc[i] -= 100;
-            slide.style.transform = `translateX(${sliderLoc[i]}%)`;
-        });
+        curSlide++;
     }
+    toSlide(curSlide);
 });
